@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Blocked by SecureSurf</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: radial-gradient(1200px 600px at 50% -10%, #1b2030 0%, #0f1117 60%);
+            color: #e8ebf2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            max-width: 520px;
+            width: 90%;
+            background: rgba(23, 26, 35, 0.9);
+            border: 1px solid #2c3142;
+            border-radius: 20px;
+            padding: 48px 40px;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+        }
+        .badge {
+            width: 84px; height: 84px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            background: linear-gradient(135deg, #ff5f6d, #c1121f);
+            box-shadow: 0 0 0 8px rgba(193, 18, 31, 0.15);
+        }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+        p { color: #aab1c4; line-height: 1.6; font-size: 15px; }
+        .host {
+            margin-top: 18px;
+            font-family: ui-monospace, "SF Mono", Menlo, monospace;
+            color: #ff8a93;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        .host:empty { display: none; }
+        .tag {
+            display: inline-block;
+            margin-top: 26px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: #232735;
+            color: #8b93a7;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        .tag b { color: #4c6ef5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">⛔</div>
+        <h1>Connection Blocked</h1>
+        <p id="reason">
+            SecureSurf prevented this page from loading because it matched your
+            security policy.
+        </p>
+        <div class="host" id="host"></div>
+        <div class="tag">Protected by <b>SecureSurf</b></div>
+    </div>
+    <script>
+        // The browser passes details via the URL fragment: #host=...&reason=...
+        (function () {
+            var params = new URLSearchParams((location.hash || "").slice(1));
+            var host = params.get("host");
+            var reason = params.get("reason");
+            if (host) {
+                document.getElementById("host").textContent = host;
+            }
+            if (reason === "ai") {
+                document.getElementById("reason").textContent =
+                    "The AI classifier flagged this page as likely malicious " +
+                    "(phishing, malware, or a suspicious link).";
+            } else if (reason === "blocklist") {
+                document.getElementById("reason").textContent =
+                    "This host is on your security blocklist (known ad / malware domain).";
+            }
+        })();
+    </script>
+</body>
+</html>
